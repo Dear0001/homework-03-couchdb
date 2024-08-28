@@ -1,0 +1,269 @@
+basePath: /
+definitions:
+  models.Attachment:
+    properties:
+      content_type:
+        type: string
+      filename:
+        type: string
+      size:
+        type: integer
+    type: object
+  models.Document:
+    properties:
+      _id:
+        type: string
+      _rev:
+        type: string
+      age:
+        type: integer
+      attachment:
+        $ref: '#/definitions/models.Attachment'
+      class:
+        type: string
+      gender:
+        type: string
+      majors:
+        type: string
+      name:
+        type: string
+    type: object
+  models.RequestDoc:
+    properties:
+      _id:
+        type: string
+      age:
+        type: integer
+      attachment:
+        $ref: '#/definitions/models.Attachment'
+      class:
+        type: string
+      gender:
+        type: string
+      majors:
+        type: string
+      name:
+        type: string
+    type: object
+  models.RequestUpdateDoc:
+    properties:
+      age:
+        type: integer
+      attachment:
+        $ref: '#/definitions/models.Attachment'
+      class:
+        type: string
+      gender:
+        type: string
+      majors:
+        type: string
+      name:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for managing students.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Student API
+  version: "1.0"
+paths:
+  /documents:
+    get:
+      description: Retrieve all documents based on criteria
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Document'
+            type: array
+      summary: Get all documents
+      tags:
+      - documents
+    post:
+      consumes:
+      - application/json
+      description: Create a new document with the input payload
+      parameters:
+      - description: Document to create
+        in: body
+        name: document
+        required: true
+        schema:
+          $ref: '#/definitions/models.RequestDoc'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.Document'
+      summary: Create a new document
+      tags:
+      - documents
+  /documents/{id}:
+    delete:
+      description: Delete a document by its ID
+      parameters:
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: Document deleted successfully
+          schema:
+            type: string
+      summary: Delete a document
+      tags:
+      - documents
+    get:
+      description: Get details of a document by its ID
+      parameters:
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Document'
+      summary: Get a document by ID
+      tags:
+      - documents
+    put:
+      consumes:
+      - application/json
+      description: Update details of a document by its ID
+      parameters:
+      - description: Document ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Updated document
+        in: body
+        name: document
+        required: true
+        schema:
+          $ref: '#/definitions/models.RequestUpdateDoc'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Document'
+      summary: Update a document
+      tags:
+      - documents
+  /documents/filter:
+    get:
+      description: Retrieve documents where age is between n1 and n2 and class matches
+        the user-provided input
+      parameters:
+      - description: Minimum Age to filter by
+        in: query
+        name: min_age
+        required: true
+        type: integer
+      - description: Maximum Age to filter by
+        in: query
+        name: max_age
+        required: true
+        type: integer
+      - description: Class to filter by
+        in: query
+        name: class
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Document'
+            type: array
+      summary: Filter documents by an age range and class
+      tags:
+      - documents
+  /file/{stu-id}/{filename}:
+    get:
+      description: Retrieve a file from CouchDB for a specific student document
+      parameters:
+      - description: Student ID (Document ID)
+        in: path
+        name: stu-id
+        required: true
+        type: string
+      - description: Filename to retrieve
+        in: path
+        name: filename
+        required: true
+        type: string
+      produces:
+      - application/octet-stream
+      responses:
+        "200":
+          description: File retrieved successfully
+          schema:
+            type: file
+        "404":
+          description: File not found
+          schema:
+            type: string
+        "500":
+          description: Internal server error
+          schema:
+            type: string
+      summary: Get a file (attachment) by filename and student ID
+      tags:
+      - file
+  /upload/{stu-id}:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Upload a file and store it as an attachment in a student's CouchDB
+        document
+      parameters:
+      - description: Student ID (Document ID)
+        in: path
+        name: stu-id
+        required: true
+        type: string
+      - description: File to upload
+        in: formData
+        name: file
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: File uploaded successfully
+          schema:
+            type: string
+        "400":
+          description: Failed to upload file
+          schema:
+            type: string
+      summary: Upload a file and attach it to a specific student's document
+      tags:
+      - file
+swagger: "2.0"
