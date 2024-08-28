@@ -7,7 +7,6 @@ import (
 
 var db *kivik.DB
 
-// InitCouchDB initializes the CouchDB client and database instance
 func InitCouchDB() *kivik.DB {
 	client, err := kivik.New("couch", "http://admin:123@localhost:5985/")
 	if err != nil {

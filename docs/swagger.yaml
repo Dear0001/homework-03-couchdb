@@ -4,21 +4,27 @@ definitions:
     properties:
       content_type:
         type: string
-      filename:
+      digest:
         type: string
-      size:
+      length:
         type: integer
+      revpos:
+        type: integer
+      stub:
+        type: boolean
     type: object
   models.Document:
     properties:
+      _attachments:
+        additionalProperties:
+          $ref: '#/definitions/models.Attachment'
+        type: object
       _id:
         type: string
       _rev:
         type: string
       age:
         type: integer
-      attachment:
-        $ref: '#/definitions/models.Attachment'
       class:
         type: string
       gender:
@@ -34,8 +40,6 @@ definitions:
         type: string
       age:
         type: integer
-      attachment:
-        $ref: '#/definitions/models.Attachment'
       class:
         type: string
       gender:
@@ -49,8 +53,6 @@ definitions:
     properties:
       age:
         type: integer
-      attachment:
-        $ref: '#/definitions/models.Attachment'
       class:
         type: string
       gender:
@@ -86,6 +88,14 @@ paths:
             items:
               $ref: '#/definitions/models.Document'
             type: array
+        "404":
+          description: No documents found
+          schema:
+            type: string
+        "500":
+          description: Internal Server Error
+          schema:
+            type: string
       summary: Get all documents
       tags:
       - documents

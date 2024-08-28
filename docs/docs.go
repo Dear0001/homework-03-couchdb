@@ -43,6 +43,18 @@ const docTemplate = `{
                                 "$ref": "#/definitions/models.Document"
                             }
                         }
+                    },
+                    "404": {
+                        "description": "No documents found",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
                 }
             },
@@ -318,17 +330,29 @@ const docTemplate = `{
                 "content_type": {
                     "type": "string"
                 },
-                "filename": {
+                "digest": {
                     "type": "string"
                 },
-                "size": {
+                "length": {
                     "type": "integer"
+                },
+                "revpos": {
+                    "type": "integer"
+                },
+                "stub": {
+                    "type": "boolean"
                 }
             }
         },
         "models.Document": {
             "type": "object",
             "properties": {
+                "_attachments": {
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/models.Attachment"
+                    }
+                },
                 "_id": {
                     "type": "string"
                 },
@@ -337,9 +361,6 @@ const docTemplate = `{
                 },
                 "age": {
                     "type": "integer"
-                },
-                "attachment": {
-                    "$ref": "#/definitions/models.Attachment"
                 },
                 "class": {
                     "type": "string"
@@ -364,9 +385,6 @@ const docTemplate = `{
                 "age": {
                     "type": "integer"
                 },
-                "attachment": {
-                    "$ref": "#/definitions/models.Attachment"
-                },
                 "class": {
                     "type": "string"
                 },
@@ -386,9 +404,6 @@ const docTemplate = `{
             "properties": {
                 "age": {
                     "type": "integer"
-                },
-                "attachment": {
-                    "$ref": "#/definitions/models.Attachment"
                 },
                 "class": {
                     "type": "string"
