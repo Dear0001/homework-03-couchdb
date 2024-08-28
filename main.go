@@ -35,7 +35,7 @@ func main() {
 	router.DELETE("/documents/:id", handlers.DeleteDocument)
 	router.GET("/documents/filter", handlers.FilterDocuments)
 
-	router.PUT("/upload/:stu-id", handlers.UploadFile)
+	router.POST("/upload/:stu-id", handlers.UploadFile)
 	router.GET("/file/:stu-id/:filename", handlers.GetFile)
 
 	router.Run()
